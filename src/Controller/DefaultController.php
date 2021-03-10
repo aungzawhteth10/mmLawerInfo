@@ -75,8 +75,8 @@ class DefaultController extends AbstractController
    private function _getDetail()
    {
 		$division = $_GET['division'];
-		$sql = 'SELECT lawer_id,' .
-				'lawer_name,' .
+		$sql = 'SELECT lawyer_id,' .
+				'lawyer_name,' .
 				'office,' .
 				'position,' .
 				'type,' .
@@ -88,7 +88,7 @@ class DefaultController extends AbstractController
 				'division,' .
 				'township,' .
 				'town ' .
-				'FROM lawer ' .
+				'FROM lawyer ' .
 				'WHERE division=?';
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute([$division]);
@@ -98,7 +98,7 @@ class DefaultController extends AbstractController
   		foreach ($row as $key => $value) {
   			$result[] = [
 	    		'index'           => $index,
-	    		'lawer_id'        => $value['lawer_id'],
+	    		'lawyer_id'        => $value['lawyer_id'],
 	    		'office'          => $value['office'],
 	    		'ph_1'            => $value['ph_1'],
 	    		'ph_2'            => $value['ph_2'],
@@ -175,7 +175,7 @@ class DefaultController extends AbstractController
    }
    public function _registerDetail($postData)
    {
-		$lawer_name = $postData['lawer_name'];
+		$lawyer_name = $postData['lawyer_name'];
 		$office = $postData['office'];
 		$position = $postData['position'];
 		$type = $postData['type'];
@@ -187,11 +187,11 @@ class DefaultController extends AbstractController
 		$division = $postData['division'];
 		$township = $postData['township'];
 		$town = $postData['town'];
-		$sql = 'INSERT INTO lawer ' .
-				'(lawer_name, office, position, type, ph_1, ph_2, ph_3, ph_4, ph_5, division, township, town) ' .
-				'VALUES (:lawer_name, :office, :position, :type, :ph_1, :ph_2, :ph_3, :ph_4, :ph_5, :division, :township, :town)';
+		$sql = 'INSERT INTO lawyer ' .
+				'(lawyer_name, office, position, type, ph_1, ph_2, ph_3, ph_4, ph_5, division, township, town) ' .
+				'VALUES (:lawyer_name, :office, :position, :type, :ph_1, :ph_2, :ph_3, :ph_4, :ph_5, :division, :township, :town)';
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->bindParam(':lawer_name', $lawer_name, \PDO::PARAM_STR);
+		$stmt->bindParam(':lawyer_name', $lawyer_name, \PDO::PARAM_STR);
 		$stmt->bindParam(':office', $office, \PDO::PARAM_STR);
 		$stmt->bindParam(':position', $position, \PDO::PARAM_STR);
 		$stmt->bindParam(':type', $type, \PDO::PARAM_STR);

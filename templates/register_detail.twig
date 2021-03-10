@@ -10,7 +10,7 @@
         elements:[
         	{autowidth:true, rows:[
         		{view:"label", label:"အမည်"},
-            	{view:"text", id:"lawer_name", name:"lawer_name", label:"", labelWidth:0},
+            	{view:"text", id:"lawyer_name", name:"lawyer_name", label:"", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>ရုံးခန်း(Will Show At Client Page)</span>"},
             	{view:"text", id:"office", name:"office", label:"", labelWidth:0},
         		{view:"label", label:"ရာထူး"},
@@ -70,7 +70,7 @@
 		detail_add: function() {
 			var _form_data = $$("registerForm").getValues();
 			// var _division = _form_data.division;
-			var _lawer_name = _form_data.lawer_name;
+			var _lawyer_name = _form_data.lawyer_name;
 			var _office = _form_data.office;
 			var _position = _form_data.position;
 			var _type = _form_data.type;
@@ -79,7 +79,7 @@
 			var _ph_3 = _form_data.ph_3;
 			var _ph_4 = _form_data.ph_4;
 			var _ph_5 = _form_data.ph_5;
-			if (!logic.validate(_lawer_name, _office, _ph_1, _ph_2, _ph_3, _ph_4, _ph_5)) {
+			if (!logic.validate(_lawyer_name, _office, _ph_1, _ph_2, _ph_3, _ph_4, _ph_5)) {
 				return false;
 			}
 			var _division = _form_data.division;
@@ -87,7 +87,7 @@
 			var _town = _form_data.town;
 			var _post_data = {
 				"page": "register_detail",
-				"lawer_name": _lawer_name,
+				"lawyer_name": _lawyer_name,
 				"office": _office,
 				"position": _position,
 				"type": _type,
@@ -106,12 +106,12 @@
 				logic.to_back();
 			});
 		},
-		validate: function(_lawer_name, _office, _ph_1, _ph_2, _ph_3, _ph_4, _ph_5) {
-			if (_lawer_name == "" && _office == "" && _ph_1 == "" && _ph_2 == "" && _ph_3 == "" && _ph_4 == "" && _ph_5 == "") {
+		validate: function(_lawyer_name, _office, _ph_1, _ph_2, _ph_3, _ph_4, _ph_5) {
+			if (_lawyer_name == "" && _office == "" && _ph_1 == "" && _ph_2 == "" && _ph_3 == "" && _ph_4 == "" && _ph_5 == "") {
 				alert("အမည်(သို့)ရုံးခန်း နှင့် ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ");
 				return false;
 			}
-			if (_lawer_name == "" && _office == "") {
+			if (_lawyer_name == "" && _office == "") {
 				alert("အမည်(သို့)ရုံးခန်းကို ထည့်သွင်းပါ");
 				return false;
 			}
