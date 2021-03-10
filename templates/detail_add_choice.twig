@@ -38,6 +38,7 @@
 	var logic = {
 		init: function() {
 			$$("to_back").attachEvent("onItemClick", logic.to_back);
+			$$("to_division_add").attachEvent("onItemClick", logic.to_division_add);
 		},
 		detail_add: function(division) {
 			webix.storage.session.put("division", division);
@@ -49,6 +50,11 @@
 			var _auth_key = webix.storage.session.get("auth_key") || "";
 			var _url = webix.storage.session.get("url");
 			location.href= _url + "?page=control_room&auth_key=" + _auth_key;
+		},
+		to_division_add: function() {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
+			var _url = webix.storage.session.get("url");
+			location.href= _url + "?page=division_add&auth_key=" + _auth_key;
 		}
 	}	      
 </script>
