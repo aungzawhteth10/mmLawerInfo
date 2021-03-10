@@ -1,0 +1,130 @@
+{% include 'base.html' %}
+<script >
+	var form = {
+		view:"form",
+		id:"registerForm",
+		scroll:"x",
+		scroll:"y",
+	    autoheight:true,
+	    borderless:true,
+        elements:[
+        	{autowidth:true, rows:[
+        		{view:"label", label:"အမည်"},
+            	{view:"text", id:"lawer_name", name:"lawer_name", label:"", labelWidth:0},
+            	{view:"label", label:"ရုံးခန်း"},
+            	{view:"text", id:"office", name:"office", label:"", labelWidth:0},
+        		{view:"label", label:"ရာထူး"},
+            	{view:"text", id:"position", name:"position", label:"", labelWidth:0},
+            	{view:"label", label:"အမျိုးအစား"},
+            	{view:"text", id:"type", name:"type", label:"", labelWidth:0},
+            	{view:"label", label:"ဖုန်းနံပါတ်(၁)"},
+            	{view:"text", id:"ph_1", name:"ph_1", label:"", labelWidth:0},
+            	{view:"label", label:"ဖုန်းနံပါတ်(၂)"},
+            	{view:"text", id:"ph_2", name:"ph_2", label:"", labelWidth:0},
+            	{view:"label", label:"ဖုန်းနံပါတ်(၃)"},
+            	{view:"text", id:"ph_3", name:"ph_3", label:"", labelWidth:0},
+            	{view:"label", label:"ဖုန်းနံပါတ်(၄)"},
+            	{view:"text", id:"ph_4", name:"ph_4", label:"", labelWidth:0},
+            	{view:"label", label:"ဖုန်းနံပါတ်(၅)"},
+            	{view:"text", id:"ph_5", name:"ph_5", label:"", labelWidth:0},
+            	{view:"label", label:"တိုင်းဒေသကြီး"},
+            	{view:"text", id:"division", name:"division", label:"", labelWidth:0, disabled:true},
+            	{view:"label", label:"မြို့နယ်"},
+            	{view:"text", id:"township", name:"township", label:"", labelWidth:0},
+            	{view:"label", label:"မြို့"},
+            	{view:"text", id:"town", name:"town", label:"", labelWidth:0},
+            	{view:"button", value:"အသစ်ထည့်သွင်းမည်", css:"webix_primary", id:"detail_add", height:50},
+        	]},
+        ]
+    };
+    var to_back = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
+    var footer = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
+	webix.ready(function () {
+		webix.ui(
+		{rows:[
+			form,
+			to_back,
+			footer,
+			{height:75}
+		]}
+		);
+		logic.init();
+	});
+	var logic = {
+		init: function() {
+			$$("detail_add").attachEvent("onItemClick", logic.detail_add);
+			$$("to_back").attachEvent("onItemClick", logic.to_back);
+			logic.setDivision();
+		},
+		auth: function() {
+			var auth_key = webix.storage.session.get("auth_key") || "";
+			if (auth_key != "@^apo9324kl.w;mmshh;fji@#asdf423$^&^&%$$45852$$#") {
+				var _url = webix.storage.session.get("url");
+				location.href= _url + "auth";
+			}
+		},
+		setDivision: function() {
+			var _division = webix.storage.session.get("division") || "";
+			$$("division").setValue(_division);
+		},
+		detail_add: function() {
+			var _form_data = $$("registerForm").getValues();
+			// var _division = _form_data.division;
+			var _lawer_name = _form_data.lawer_name;
+			var _office = _form_data.office;
+			var _position = _form_data.position;
+			var _type = _form_data.type;
+			var _ph_1 = _form_data.ph_1;
+			var _ph_2 = _form_data.ph_2;
+			var _ph_3 = _form_data.ph_3;
+			var _ph_4 = _form_data.ph_4;
+			var _ph_5 = _form_data.ph_5;
+			if (!logic.validate(_lawer_name, _office, _ph_1, _ph_2, _ph_3, _ph_4, _ph_5)) {
+				return false;
+			}
+			var _division = _form_data.division;
+			var _township = _form_data.township;
+			var _town = _form_data.town;
+			var _post_data = {
+				"page": "register_detail",
+				"lawer_name": _lawer_name,
+				"office": _office,
+				"position": _position,
+				"type": _type,
+				"ph_1": _ph_1,
+				"ph_2": _ph_2,
+				"ph_3": _ph_3,
+				"ph_4": _ph_4,
+				"ph_5": _ph_5,
+				"division": _division,
+				"township": _township,
+				"town": _town
+			};
+			$.post("/", _post_data, function() {
+				alert("ပြည်နယ်နှင့်တိုင်းဒေသ အသေးစိတ် အချက်အလက်အသစ် ထည့်သွင်းမှု အောင်မြင်ပါသည်");
+				var _url = webix.storage.session.get("url");
+				logic.to_back();
+			});
+		},
+		validate: function(_lawer_name, _office, _ph_1, _ph_2, _ph_3, _ph_4, _ph_5) {
+			if (_lawer_name == "" && _office == "" && _ph_1 == "" && _ph_2 == "" && _ph_3 == "" && _ph_4 == "" && _ph_5 == "") {
+				alert("အမည်(သို့)ရုံးခန်း နှင့် ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ");
+				return false;
+			}
+			if (_lawer_name == "" && _office == "") {
+				alert("အမည်(သို့)ရုံးခန်းကို ထည့်သွင်းပါ");
+				return false;
+			}
+			if (_ph_1 == "" && _ph_2 == "" && _ph_3 == "" && _ph_4 == "" && _ph_5 == "") {
+				alert("ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ");
+				return false;
+			}
+			return true;
+		},
+		to_back: function() {
+			var _url = webix.storage.session.get("url");
+			var _auth_key = webix.storage.session.get("auth_key");
+			location.href= _url + "?page=detail_add_choice&auth_key=" + _auth_key;
+		}
+	}
+</script>

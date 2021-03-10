@@ -1,0 +1,49 @@
+{% include 'base.html' %}
+<script >
+    	var division = {
+	    view:"form",
+	    id:"detail_form",
+	    scroll:"y", 
+	    autoheight:true,
+	    borderless:true,
+	    elements:[
+{% for division in divisionList %}
+			{id:"row_{{division.division}}", rows:[
+		        {cols:[
+		        	{},
+		            {view:"button", id:"division_{{division.division}}", value:"{{division.division}}", css:"webix_primary", height:50, width:300, click:function() {logic.detail_add("{{division.division}}");}},
+		        	{}
+		        ]},
+			]},
+{% endfor %}
+    ]};
+    var to_back = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
+	var footer = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
+	webix.ready(function () {
+		webix.ui(
+		{rows:[
+			division,
+			to_back,
+			footer,
+			{height:75}
+		]}
+		);
+		logic.init();
+	});
+	var logic = {
+		init: function() {
+			$$("to_back").attachEvent("onItemClick", logic.to_back);
+		},
+		detail_add: function(division) {
+			webix.storage.session.put("division", division);
+			var _url = webix.storage.session.get("url");
+			var _auth_key = webix.storage.session.get("auth_key");
+			location.href= _url + "?page=register_detail&auth_key=" + _auth_key;
+		},
+		to_back: function() {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
+			var _url = webix.storage.session.get("url");
+			location.href= _url + "?page=control_room&auth_key=" + _auth_key;
+		}
+	}	      
+</script>

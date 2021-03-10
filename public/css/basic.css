@@ -1,0 +1,19 @@
+div.logo{
+	background-image: url('../images/logo.jpg');
+	float: left;
+	display:inline-block;
+	width: 50px;
+	height: 50px;
+}
+h2{
+	padding-top: 7px;
+	padding-left: 60px;
+	color: red;
+}
+div.banner{
+	background-color: aqua;
+	height: 50px;
+}
+a{
+	text-decoration: none;
+}

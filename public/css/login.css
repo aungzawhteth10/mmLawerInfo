@@ -1,0 +1,17 @@
+form.login{
+	text-align: center;
+	margin-top: 50px;
+}
+div.input{
+	margin-top: 10px;
+}
+input{
+	margin-left: 10px;
+}
+b{
+	width: 70px;
+	display: inline-block;
+}
+button{
+	margin-top: 10px;
+}

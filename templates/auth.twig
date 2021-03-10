@@ -1,0 +1,60 @@
+{% include 'base.html' %}
+<script >
+	var form = {
+		view:"form",
+		id:"registerForm",
+		scroll:"x",
+		scroll:"y",
+	    autoheight:true,
+	    borderless:true,
+        elements:[
+        	{autowidth:true, rows:[
+        		{view:"label", label:"Authentication Key"},
+            	{view:"text", id:"auth_key", name:"auth_key", label:"",labelWidth:0},
+            	{view:"button", value:"Confirm", css:"webix_primary", id:"confirm", height:50},
+        	]},
+        ],
+        rules:{
+        	"auth_key":webix.rules.isNotEmpty
+    	}
+    };
+    var to_home = {view:"button", id:"to_home", value:"ပင်မစာမျက်နှာသို့", css:"webix_primary", height:50, width:150};
+    var footer = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
+	webix.ready(function () {
+		webix.ui(
+		{rows:[
+			form,
+			to_home,
+			footer,
+			{height:75}
+		]}
+		);
+		logic.init();
+	});
+	var logic = {
+		init: function() {
+			$$("confirm").attachEvent("onItemClick", logic.confirm);
+			$$("to_home").attachEvent("onItemClick", logic.to_home);
+		},
+		confirm: function() {
+			if (!$$("registerForm").validate()) {
+				webix.message({type:"error", text:"Authentication Key is Empty"});
+				return false;
+			}
+			var _form_data = $$("registerForm").getValues();
+			var _auth_key = _form_data.auth_key;
+			$.get("/", {'page':'auth','auth_key':_auth_key}, function(data) {
+				if(data == "true"){
+					webix.storage.session.put("auth_key", _auth_key);
+					var _url = webix.storage.session.get("url");
+					location.href= _url + "?page=control_room&auth_key=" + _auth_key;
+				}
+				webix.message({type:"error", text:"Authentication Key is not valid"});
+			});
+		},
+		to_home: function() {
+			var _url = webix.storage.session.get("url");
+			location.href= _url;
+		}
+	}
+</script>
