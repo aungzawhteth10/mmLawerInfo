@@ -17,13 +17,18 @@
 			]},
 {% endfor %}
     ]};
-    var to_back = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
-	var footer = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
+	var to_back         = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
+	var to_division_add = {view:"button", id:"to_division_add", value:"ပြည်နယ်နှင့်တိုင်း အသစ်ထည့်မည်", css:"webix_primary", height:50, autowidth:true};
+	var footer          = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
 	webix.ready(function () {
 		webix.ui(
 		{rows:[
 			division,
-			to_back,
+			{cols:[
+				to_back,
+				{},
+				to_division_add
+			]},
 			footer,
 			{height:75}
 		]}

@@ -33,23 +33,23 @@ class DefaultController extends AbstractController
 			return $this->_getDetail();
 		}
 		if ($page == 'control_room') {
-			$auth_key = $_GET['auth_key'];
+			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->render('control_room.twig') : $this->render('auth.twig');
 		}
 		if ($page == 'auth') {
-			$auth_key = $_GET['auth_key'];
+			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? new Response('true') : new Response('false');
 		}
 		if ($page == 'division_add') {
-			$auth_key = $_GET['auth_key'];
+			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->render('division_add.twig') : $this->render('auth.twig');
 		}
 		if ($page == 'detail_add_choice') {
-			$auth_key = $_GET['auth_key'];
+			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->_getDivisionList() : $this->render('auth.twig');
 		}
 		if ($page == 'register_detail') {
-			$auth_key = $_GET['auth_key'];
+			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->render('register_detail.twig') : $this->render('auth.twig');
 		}
 		$this->index();
