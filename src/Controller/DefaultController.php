@@ -52,7 +52,7 @@ class DefaultController extends AbstractController
 			$auth_key = $_GET['auth_key'];
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->render('register_detail.twig') : $this->render('auth.twig');
 		}
-		return new Response("<span style='color:red;'>Something is Wrong with page routing!</span>", 400);
+		$this->index();
    }
    private function _index()
    {
@@ -99,29 +99,21 @@ class DefaultController extends AbstractController
   			$result[] = [
 	    		'index'           => $index,
 	    		'lawer_id'        => $value['lawer_id'],
-	    		'lawer_name'      => $value['lawer_name'],
 	    		'office'          => $value['office'],
-	    		'position'        => $value['position'],
-	    		'type'            => $value['type'],
 	    		'ph_1'            => $value['ph_1'],
 	    		'ph_2'            => $value['ph_2'],
 	    		'ph_3'            => $value['ph_3'],
 	    		'ph_4'            => $value['ph_4'],
 	    		'ph_5'            => $value['ph_5'],
 	    		'division'        => $value['division'],
-	    		'township'        => $value['township'],
 	    		'town'            => $value['town'],
-	    		'lawer_name_show' => $value['lawer_name'] == '' ? true : false,
 	    		'office_show'     => $value['office'] == '' ? true : false,
-	    		'position_show'   => $value['position'] == '' ? true : false,
-	    		'type_show'       => $value['type'] == '' ? true : false,
 	    		'ph_1_show'       => $value['ph_1'] == '' ? true : false,
 	    		'ph_2_show'       => $value['ph_2'] == '' ? true : false,
 	    		'ph_3_show'       => $value['ph_3'] == '' ? true : false,
 	    		'ph_4_show'       => $value['ph_4'] == '' ? true : false,
 	    		'ph_5_show'       => $value['ph_5'] == '' ? true : false,
 	    		'division_show'   => $value['division'] == '' ? true : false,
-	    		'township_show'   => $value['township'] == '' ? true : false,
 	    		'town_show'       => $value['town'] == '' ? true : false,
 	    	];
 	    	$index++;
