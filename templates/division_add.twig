@@ -47,9 +47,17 @@
 				"page": "division_add",
 				"division": _division,
 			};
-			$.post("/", _post_data, function() {
-				alert("ပြည်နယ်နှင့်တိုင်းဒေသအချက်အလက်အသစ် ထည့်သွင်းမှု အောင်မြင်ပါသည်");
-				logic.to_back();
+			$.post("/", _post_data, function(data) {
+				if (data == "success") {
+					alert("ပြည်နယ်နှင့်တိုင်းဒေသအချက်အလက်အသစ် ထည့်သွင်းမှု အောင်မြင်ပါသည်");
+					logic.to_back();
+				} else if (data == "duplicate") {
+					$$("division").setValue("");
+					webix.message({type:"error", text:"တူညီသော ပြည်နယ်နှင့်တိုင်း ဒေသကြီး ထည့်သွင်းထားပြီး ဖြစ်ပါသဖြင့် ထပ်မံ ထည့်သွင်း၍မရပါ"});
+				} else {
+					$$("division").setValue("");
+					webix.message({type:"error", text:"ပြည်နယ်နှင့်တိုင်းဒေသကြီးကို ထည့်သွင်းပေးပါ"});
+				}
 			});
 		},
 		to_back: function() {

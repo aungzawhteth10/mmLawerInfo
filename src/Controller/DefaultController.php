@@ -125,6 +125,25 @@ class DefaultController extends AbstractController
    }
    private function _register_division($division)
    {
+   		$division_length = strlen($division);
+   		for ($i = strlen($division)-1; $i >= 0; $i--) {
+   			if ($division{$i} == ' ') {
+   				$division = mb_substr($division, 0, $i);
+   			} else {
+   				break;
+   			}
+   		}
+   		if (strlen($division) == 0) {
+   			return new Response('fail');
+   		}
+   		$sql = 'SELECT division ' .
+				'FROM division_list where division=?';
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([$division]);
+  		$row = $stmt->fetchAll();
+		if (count($row) != 0) {
+   			return new Response('duplicate');
+		}
 		$sql = 'INSERT INTO division_list ' .
 				'(division) ' .
 				'VALUES (:division)';
