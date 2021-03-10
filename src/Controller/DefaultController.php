@@ -24,6 +24,9 @@ class DefaultController extends AbstractController
 		if (($_POST['page'] ?? '') == 'register_detail') {
 			return $this->_registerDetail($_POST);
 		}
+		if (($_POST['page'] ?? '') == 'division_delete') {
+			return $this->_deleteDivisionDataAll($_POST);
+		}
 		$page = $_GET['page'] ?? '';
 		if ($page == '') {
 			return $this->_index();
@@ -51,6 +54,10 @@ class DefaultController extends AbstractController
 		if ($page == 'register_detail') {
 			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->render('register_detail.twig') : $this->render('auth.twig');
+		}
+		if ($page == 'division_delete') {
+			$auth_key = $_GET['auth_key'] ?? '';
+			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->_getDivisionDelete() : $this->render('auth.twig');
 		}
 		$this->index();
    }
@@ -173,6 +180,25 @@ class DefaultController extends AbstractController
 	    }
 	    return $this->render('detail_add_choice.twig', ['divisionList' => $result]);
    }
+   private function _getDivisionDelete()
+   {
+		$sql = 'SELECT id,division ' .
+				'FROM division_list';
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute();
+  		$row = $stmt->fetchAll();
+		// 接続を閉じる
+	    $this->pdo = null;
+	    $stmt = null;
+	    $result = [];
+	    foreach ($row as $key => $value) {
+	    	$result[] = [
+	    		'id'       => $value['id'],
+	    		'division' => $value['division'],
+	    	];
+	    }
+	    return $this->render('division_delete.twig', ['divisionList' => $result]);
+   }
    public function _registerDetail($postData)
    {
 		$lawyer_name = $postData['lawyer_name'];
@@ -204,6 +230,32 @@ class DefaultController extends AbstractController
 		$stmt->bindParam(':township', $township, \PDO::PARAM_STR);
 		$stmt->bindParam(':town', $town, \PDO::PARAM_STR);
 		$result = $stmt->execute();
+		// 接続を閉じる
+	    $this->pdo = null;
+	    $stmt = null;
+	    return new Response("success");
+   }
+   public function _deleteDivisionDataAll($postData)
+   {
+		$id = $postData['id'];
+		$division= $postData['division'];
+		$sql = 'DELETE FROM division_list ' .
+				'WHERE id=:id';
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->bindParam(':id', $id, \PDO::PARAM_INT);
+		$count = 0;
+		$count = $stmt->execute();
+		if ($count == 0) {
+			return new Response("failed");
+		}
+		$sql = 'DELETE FROM lawyer ' .
+				'WHERE division=:division';
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->bindParam(':division', $division, \PDO::PARAM_STR);
+		$count += $stmt->execute();
+		if ($count == 0) {
+			return new Response("failed");
+		}
 		// 接続を閉じる
 	    $this->pdo = null;
 	    $stmt = null;

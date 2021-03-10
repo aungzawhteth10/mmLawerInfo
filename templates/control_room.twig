@@ -18,6 +18,16 @@
 		            {view:"button", id:"detail_add", value:"အသေးစိတ်အချက်အလက်အသစ်ထည့်ရန်", css:"webix_primary", height:50, width:350},
 		        	{}
 		        ]},
+		        {cols:[
+		        	{},
+		            {view:"button", id:"division_delete", value:"ပြည်နယ်နှင့်တိုင်းဒေသကြီးကိုဖျက်သိမ်းရန်", css:"webix_primary", height:50, width:350},
+		        	{}
+		        ]},
+		        {cols:[
+		        	{},
+		            {view:"button", id:"detail_edit", value:"အသေးစိတ်အချက်အလက်ကိုပြင်ဆင်ရန်", css:"webix_primary", height:50, width:350},
+		        	{}
+		        ]}
 			]},
     	]
     };
@@ -39,11 +49,17 @@
 			$$("division_add").attachEvent("onItemClick", logic.division_add);
 			$$("to_back").attachEvent("onItemClick", logic.to_back);
 			$$("detail_add").attachEvent("onItemClick", logic.detail_add);
+			$$("division_delete").attachEvent("onItemClick", logic.division_delete);
 		},
 		division_add: function() {
 			var _url = webix.storage.session.get("url");
 			var _auth_key = webix.storage.session.get("auth_key");
 			location.href= _url + "?page=division_add&auth_key=" + _auth_key;
+		},
+		division_delete: function() {
+			var _url = webix.storage.session.get("url");
+			var _auth_key = webix.storage.session.get("auth_key");
+			location.href= _url + "?page=division_delete&auth_key=" + _auth_key;
 		},
 		detail_add: function() {
 			var _url = webix.storage.session.get("url");

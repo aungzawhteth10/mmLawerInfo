@@ -1,0 +1,79 @@
+{% include 'base.html' %}
+<script >
+    	var division = {
+	    view:"form",
+	    id:"detail_form",
+	    scroll:"y", 
+	    autoheight:true,
+	    borderless:true,
+	    elements:[
+	    	{view:"label", label:"<span style='color:red;'>ဖျက်သိမ်းမည့် ပြည်နယ်နှင့်တိုင်းဒေသကြီးကို ရွေးချယ်ပါ</span>"},
+{% for division in divisionList %}
+			{id:"row_{{division.division}}", rows:[
+		        {cols:[
+		        	{},
+		            {view:"button", id:"division_{{division.division}}", value:"{{division.division}}", css:"webix_primary", height:50, width:300, click:function() {logic.division_delete("{{division.id}}", "{{division.division}}");}},
+		        	{}
+		        ]},
+			]},
+{% endfor %}
+    ]};
+	var to_back         = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
+	var footer          = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
+	webix.ready(function () {
+		webix.ui(
+		{rows:[
+			division,
+			to_back,
+			footer,
+			{height:75}
+		]}
+		);
+		logic.init();
+	});
+	var logic = {
+		init: function() {
+			$$("to_back").attachEvent("onItemClick", logic.to_back);
+		},
+		division_delete: function(id, division) {
+			webix.confirm({
+			  title:"Title",
+			  ok:"Yes", cancel:"No",
+			  text:division + "၏အချက်အလက် အားလုံးကို ဖျက်သိမ်းမည်"
+			}).then(function(){
+				var _post_data = {
+					"page": "division_delete",
+					"id": id,
+					"division": division,
+				};
+				$.post("/", _post_data, function(data) {
+				if (data == "success") {
+					webix.alert({
+					  title:"Success",
+					  ok:"OK",
+					  text:division + "၏အချက်အလက် အားလုံး ဖျက်သိမ်းမှု အောင်မြင်ပါသည်"
+					}) .then(function(){logic.reload();}).fail(function(){});
+				} else {
+					webix.alert({
+					  title:"Fail",
+					  ok:"OK",
+					  text:division + "အချက်အလက်များ မရှိတော့ပါ"
+					});
+					logic.reload();
+				}
+			});
+			  });
+		},
+		to_back: function() {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
+			var _url = webix.storage.session.get("url");
+			location.href= _url + "?page=control_room&auth_key=" + _auth_key;
+		},
+		reload: function() {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
+			var _url = webix.storage.session.get("url");
+			location.href= _url + "?page=division_delete&auth_key=" + _auth_key;
+		}
+
+	}	      
+</script>
