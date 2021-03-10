@@ -48,8 +48,10 @@
 					webix.storage.session.put("auth_key", _auth_key);
 					var _url = webix.storage.session.get("url");
 					location.href= _url + "?page=control_room&auth_key=" + _auth_key;
+				} else {
+					webix.message({type:"error", text:"Authentication Key is not valid"});
+					return false;
 				}
-				webix.message({type:"error", text:"Authentication Key is not valid"});
 			});
 		},
 		to_home: function() {
