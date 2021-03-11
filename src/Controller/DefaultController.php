@@ -25,7 +25,7 @@ class DefaultController extends AbstractController
 			return $this->_registerDetail($_POST);
 		}
 		if (($_POST['page'] ?? '') == 'division_delete') {
-			return $this->_deleteDivisionDataAll($_POST);
+			return $this->_deleteDivisionData($_POST);
 		}
 		$page = $_GET['page'] ?? '';
 		if ($page == '') {
@@ -37,7 +37,7 @@ class DefaultController extends AbstractController
 		}
 		if ($page == 'control_room') {
 			$auth_key = $_GET['auth_key'] ?? '';
-			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->render('control_room.twig') : $this->render('auth.twig');
+			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->_getControlRoom() : $this->render('auth.twig');
 		}
 		if ($page == 'auth') {
 			$auth_key = $_GET['auth_key'] ?? '';
@@ -47,19 +47,15 @@ class DefaultController extends AbstractController
 			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->render('division_add.twig') : $this->render('auth.twig');
 		}
-		if ($page == 'detail_add_choice') {
+		if ($page == 'detail_list') {
 			$auth_key = $_GET['auth_key'] ?? '';
-			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->_getDivisionList() : $this->render('auth.twig');
+			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->_getToDetailList() : $this->render('auth.twig');
 		}
 		if ($page == 'register_detail') {
 			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->render('register_detail.twig') : $this->render('auth.twig');
 		}
-		if ($page == 'division_delete') {
-			$auth_key = $_GET['auth_key'] ?? '';
-			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->_getDivisionDelete() : $this->render('auth.twig');
-		}
-		$this->index();
+		$this->_index();
    }
    private function _index()
    {
@@ -78,6 +74,65 @@ class DefaultController extends AbstractController
 	    	];
 	    }
 	    return $this->render('index.twig', ['divisionList' => $result]);
+   }
+   private function _getToDetailList()
+   {
+		$division = $_GET['division'];
+		$sql = 'SELECT lawyer_id,' .
+				'lawyer_name,' .
+				'office,' .
+				'position,' .
+				'type,' .
+				'ph_1,' .
+				'ph_2,' .
+				'ph_3,' .
+				'ph_4,' .
+				'ph_5,' .
+				'division,' .
+				'township,' .
+				'town ' .
+				'FROM lawyer ' .
+				'WHERE division=?';
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([$division]);
+  		$row = $stmt->fetchAll();
+  		$result = [];
+  		$index = 1;
+  		foreach ($row as $key => $value) {
+  			$result[] = [
+	    		'index'            => $index,
+	    		'lawyer_id'        => $value['lawyer_id'],
+	    		'lawyer_name'      => $value['lawyer_name'],
+	    		'position'         => $value['position'],
+	    		'type'             => $value['type'],
+	    		'office'           => $value['office'],
+	    		'ph_1'             => $value['ph_1'],
+	    		'ph_2'             => $value['ph_2'],
+	    		'ph_3'             => $value['ph_3'],
+	    		'ph_4'             => $value['ph_4'],
+	    		'ph_5'             => $value['ph_5'],
+	    		'division'         => $value['division'],
+	    		'township'         => $value['township'],
+	    		'town'             => $value['town'],
+	    		'lawyer_name_show' => $value['lawyer_name'] == '' ? true : false,
+	    		'position_show'    => $value['position'] == '' ? true : false,
+	    		'type_show'        => $value['type'] == '' ? true : false,
+	    		'office_show'      => $value['office'] == '' ? true : false,
+	    		'ph_1_show'        => $value['ph_1'] == '' ? true : false,
+	    		'ph_2_show'        => $value['ph_2'] == '' ? true : false,
+	    		'ph_3_show'        => $value['ph_3'] == '' ? true : false,
+	    		'ph_4_show'        => $value['ph_4'] == '' ? true : false,
+	    		'ph_5_show'        => $value['ph_5'] == '' ? true : false,
+	    		'division_show'    => $value['division'] == '' ? true : false,
+	    		'township_show'    => $value['township'] == '' ? true : false,
+	    		'town_show'        => $value['town'] == '' ? true : false,
+	    	];
+	    	$index++;
+  		}
+		// 接続を閉じる
+	    $this->pdo = null;
+	    $stmt = null;
+	    return $this->render('detail_list.twig', ['division' => $division, 'detailList' => $result]);
    }
    private function _getDetail()
    {
@@ -162,27 +217,9 @@ class DefaultController extends AbstractController
 	    $stmt = null;
 	    return new Response("success");
    }
-   private function _getDivisionList()
+   private function _getControlRoom()
    {
-		$sql = 'SELECT division ' .
-				'FROM division_list';
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute();
-  		$row = $stmt->fetchAll();
-		// 接続を閉じる
-	    $this->pdo = null;
-	    $stmt = null;
-	    $result = [];
-	    foreach ($row as $key => $value) {
-	    	$result[] = [
-	    		'division' => $value['division'],
-	    	];
-	    }
-	    return $this->render('detail_add_choice.twig', ['divisionList' => $result]);
-   }
-   private function _getDivisionDelete()
-   {
-		$sql = 'SELECT id,division ' .
+		$sql = 'SELECT id, division ' .
 				'FROM division_list';
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute();
@@ -197,7 +234,7 @@ class DefaultController extends AbstractController
 	    		'division' => $value['division'],
 	    	];
 	    }
-	    return $this->render('division_delete.twig', ['divisionList' => $result]);
+	    return $this->render('control_room.twig', ['divisionList' => $result]);
    }
    public function _registerDetail($postData)
    {
@@ -235,7 +272,7 @@ class DefaultController extends AbstractController
 	    $stmt = null;
 	    return new Response("success");
    }
-   public function _deleteDivisionDataAll($postData)
+   public function _deleteDivisionData($postData)
    {
 		$id = $postData['id'];
 		$division= $postData['division'];

@@ -1,0 +1,67 @@
+{% include 'base.html' %}
+<style>
+</style>
+<script >
+	var div_label = {view:"label", id:"div_label", label:"<div style='font-size:1.5em; color:blue;'>{{division}}</div>", css: "title"};
+	var div_detail = {
+	    view:"form",
+	    id:"detail_form",
+	    scroll:"y", 
+	    autoheight:true,
+	    borderless:true,
+	    elements:[
+{% for detail in detailList %}
+			{id:"row_{{detail.index}}", rows:[
+				{view:"label", id:"detail_label_name_{{detail.index}}", label:"{{detail.lawyer_name}}", hidden:"{{detail.lawyer_name_show}}"},
+				{view:"label", id:"detail_label_office_{{detail.index}}", label:"{{detail.office}}", hidden:"{{detail.office_show}}"},
+				{view:"label", id:"detail_label_position_{{detail.index}}", label:"{{detail.position}}", hidden:"{{detail.position_show}}"},
+				{view:"label", id:"detail_label_type_{{detail.index}}", label:"{{detail.type}}", hidden:"{{detail.type_show}}"},
+				{view:"label", id:"detail_label_ph_1_{{detail.index}}", label:"<a href='tel:{{detail.ph_1}}'>{{detail.ph_1}}</a>", hidden:"{{detail.ph_1_show}}"},
+				{view:"label", id:"detail_label_ph_2_{{detail.index}}", label:"<a href='tel:{{detail.ph_2}}'>{{detail.ph_2}}</a>", hidden:"{{detail.ph_2_show}}"},
+				{view:"label", id:"detail_label_ph_3_{{detail.index}}", label:"<a href='tel:{{detail.ph_3}}'>{{detail.ph_3}}</a>", hidden:"{{detail.ph_3_show}}"},
+				{view:"label", id:"detail_label_ph_4_{{detail.index}}", label:"<a href='tel:{{detail.ph_4}}'>{{detail.ph_4}}</a>", hidden:"{{detail.ph_4_show}}"},
+				{view:"label", id:"detail_label_ph_5_{{detail.index}}", label:"<a href='tel:{{detail.ph_5}}'>{{detail.ph_5}}</a>", hidden:"{{detail.ph_5_show}}"},
+				{view:"label", id:"detail_label_township_{{detail.index}}", label:"{{detail.township}}", hidden:"{{detail.township_show}}"},
+				{view:"label", id:"detail_label_town_{{detail.index}}", label:"{{detail.town}}", hidden:"{{detail.town_show}}"},
+				{height:5, rows:[{view:"label", label:"<div style='height:1px; background:black;'></div>", css:"line"}]},
+			]},
+{% endfor %}
+	    ]
+	};
+	var to_back = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
+	var register_detail = {view:"button", id:"btn_register_detail", value:"အသစ်ထည့်သွင်းမည်", css:"webix_primary", height:50, width:200};
+	var footer = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
+	webix.ready(function () {
+		webix.ui(
+		{view:"form",
+		    elements:[
+				div_label,
+				div_detail,
+				{cols:[
+					to_back,
+					{},
+					register_detail
+				]},
+				footer,
+				{height:40}
+		]})
+		logic.init();
+	});
+	var logic = {
+		init: function () {
+			$$("to_back").attachEvent("onItemClick", logic.to_back);
+			$$("btn_register_detail").attachEvent("onItemClick", logic.to_register_detail);
+		},
+		to_back: function() {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
+			var _url = webix.storage.session.get("url");
+			location.href= _url + "?page=control_room&auth_key=" + _auth_key;
+		},
+		to_register_detail: function() {
+			division = webix.storage.session.get("division");
+			var _url = webix.storage.session.get("url");
+			var _auth_key = webix.storage.session.get("auth_key");
+			location.href= _url + "?page=register_detail&division=" + division + "&auth_key=" + _auth_key;
+		}
+	};
+</script>

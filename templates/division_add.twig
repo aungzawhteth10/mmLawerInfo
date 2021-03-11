@@ -52,12 +52,14 @@
 					webix.alert({
 					  title:"Success",
 					  ok:"OK",
+					  width:300,
 					  text:"ပြည်နယ်နှင့်တိုင်းဒေသအချက်အလက်အသစ် ထည့်သွင်းမှု အောင်မြင်ပါသည်"
 					}) .then(function(){logic.to_back();});
 				} else if (data == "duplicate") {
 					webix.alert({
 					  title:"Division Name already Exist",
 					  ok:"OK",
+					  width:300,
 					  type:"alert-error",
 					  text:"တူညီသော ပြည်နယ်နှင့်တိုင်း ဒေသကြီး ထည့်သွင်းထားပြီး ဖြစ်ပါသဖြင့် ထပ်မံ ထည့်သွင်း၍မရပါ"
 					}) .then(function(){$$("division").setValue("");});

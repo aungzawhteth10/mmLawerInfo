@@ -1,43 +1,37 @@
 {% include 'base.html' %}
 <script >
-	var division = {
+    	var division = {
 	    view:"form",
-	    id:"division_form",
+	    id:"detail_form",
 	    scroll:"y", 
 	    autoheight:true,
 	    borderless:true,
 	    elements:[
-			{rows:[
+{% for division in divisionList %}
+			{id:"row_{{division.division}}", rows:[
 		        {cols:[
 		        	{},
-		            {view:"button", id:"division_add", value:"ပြည်နယ်နှင့်တိုင်းဒေသကြီးအသစ်ထည့်ရန်", css:"webix_primary", height:50, width:350},
+		            {view:"button", id:"division_{{division.division}}", value:"{{division.division}}", css:"webix_primary", height:50, width:300, click:function() {logic.to_detail_list("{{division.division}}");}},
+		            {view:"button", value:"<img src='/images/remove_icon.jpg'>", width:55, click:function() {logic.division_delete("{{division.id}}", "{{division.division}}");}},
 		        	{}
 		        ]},
-		        {cols:[
-		        	{},
-		            {view:"button", id:"detail_add", value:"အသေးစိတ်အချက်အလက်အသစ်ထည့်ရန်", css:"webix_primary", height:50, width:350},
-		        	{}
-		        ]},
-		        {cols:[
-		        	{},
-		            {view:"button", id:"division_delete", value:"ပြည်နယ်နှင့်တိုင်းဒေသကြီးကိုဖျက်သိမ်းရန်", css:"webix_primary", height:50, width:350},
-		        	{}
-		        ]},
-		        {cols:[
-		        	{},
-		            {view:"button", id:"detail_edit", value:"အသေးစိတ်အချက်အလက်ကိုပြင်ဆင်ရန်", css:"webix_primary", height:50, width:350},
-		        	{}
-		        ]}
 			]},
-    	]
-    };
-    var to_back = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
-    var footer = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
+{% endfor %}
+    ]};
+	var header          = {view:"label", label:"<div style='font-size:1.5em; color:blue;'>Control Room</div>", css: "title"};
+	var to_back         = {view:"button", id:"to_back", value:"Home", css:"webix_primary", height:50, width:100};
+	var to_division_add = {view:"button", id:"to_division_add", value:"ပြည်နယ်နှင့်တိုင်း အသစ်ထည့်မည်", css:"webix_primary", height:50, autowidth:true};
+	var footer          = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
 	webix.ready(function () {
 		webix.ui(
 		{rows:[
+			header,
 			division,
-			to_back,
+			{cols:[
+				to_back,
+				{},
+				to_division_add
+			]},
 			footer,
 			{height:75}
 		]}
@@ -46,29 +40,59 @@
 	});
 	var logic = {
 		init: function() {
-			$$("division_add").attachEvent("onItemClick", logic.division_add);
 			$$("to_back").attachEvent("onItemClick", logic.to_back);
-			$$("detail_add").attachEvent("onItemClick", logic.detail_add);
-			$$("division_delete").attachEvent("onItemClick", logic.division_delete);
+			$$("to_division_add").attachEvent("onItemClick", logic.to_division_add);
 		},
-		division_add: function() {
+		to_detail_list: function(division) {
+			webix.storage.session.put("division", division);
 			var _url = webix.storage.session.get("url");
 			var _auth_key = webix.storage.session.get("auth_key");
-			location.href= _url + "?page=division_add&auth_key=" + _auth_key;
-		},
-		division_delete: function() {
-			var _url = webix.storage.session.get("url");
-			var _auth_key = webix.storage.session.get("auth_key");
-			location.href= _url + "?page=division_delete&auth_key=" + _auth_key;
-		},
-		detail_add: function() {
-			var _url = webix.storage.session.get("url");
-			var _auth_key = webix.storage.session.get("auth_key");
-			location.href= _url + "?page=detail_add_choice&auth_key=" + _auth_key;
+			location.href= _url + "?page=detail_list&division=" + division + "&auth_key=" + _auth_key;
 		},
 		to_back: function() {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
 			var _url = webix.storage.session.get("url");
 			location.href= _url;
+		},
+		to_division_add: function() {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
+			var _url = webix.storage.session.get("url");
+			location.href= _url + "?page=division_add&auth_key=" + _auth_key;
+		},
+		division_delete: function(id, division) {
+			webix.confirm({
+			  title:"Title",
+			  ok:"Yes", cancel:"No",
+			  text:division + "၏အချက်အလက် အားလုံးကို ဖျက်သိမ်းမည်"
+			}).then(function(){
+				var _post_data = {
+					"page": "division_delete",
+					"id": id,
+					"division": division,
+				};
+				$.post("/", _post_data, function(data) {
+				if (data == "success") {
+					webix.alert({
+					  title:"Success",
+					  ok:"OK",
+					  width:300,
+					  text:division + "၏အချက်အလက် အားလုံး ဖျက်သိမ်းမှု အောင်မြင်ပါသည်"
+					}) .then(function(){logic.reload();}).fail(function(){});
+				} else {
+					webix.alert({
+					  title:"Fail",
+					  ok:"OK",
+					  text:division + "အချက်အလက်များ မရှိတော့ပါ"
+					});
+					logic.reload();
+				}
+			});
+			  });
+		},
+		reload: function(id) {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
+			var _url = webix.storage.session.get("url");
+			location.href= _url + "?page=control_room&auth_key=" + _auth_key;
 		}
 	}	      
 </script>

@@ -107,7 +107,8 @@
 				webix.alert({
 					title:"Success",
 					ok:"OK",
-					text:"ပြည်နယ်နှင့်တိုင်းဒေသ အသေးစိတ် အချက်အလက်အသစ် ထည့်သွင်းမှု အောင်မြင်ပါသည်"
+					width:300,
+					text:"ပြည်နယ်နှင့်တိုင်းဒေသ အသေးစိတ်အချက်အလက်အသစ်ထည့်သွင်းမှု အောင်မြင်ပါသည်"
 				}) .then(function(){logic.to_back();});
 			});
 		},
@@ -117,6 +118,7 @@
 					title:"Input Require data",
 					ok:"OK",
 					type:"alert-error",
+					width:300,
 					text:"ရုံးခန်း နှင့် ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ"
 				});
 				return false;
@@ -126,6 +128,7 @@
 					title:"Input Require data",
 					ok:"OK",
 					type:"alert-error",
+					width:300,
 					text:"ရုံးခန်းကို ထည့်သွင်းပါ"
 				});
 				return false;
@@ -135,6 +138,7 @@
 					title:"Input Require data",
 					ok:"OK",
 					type:"alert-error",
+					width:300,
 					text:"ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ"
 				});
 				return false;
@@ -142,9 +146,10 @@
 			return true;
 		},
 		to_back: function() {
-			var _url = webix.storage.session.get("url");
+			var _url      = webix.storage.session.get("url");
 			var _auth_key = webix.storage.session.get("auth_key");
-			location.href= _url + "?page=detail_add_choice&auth_key=" + _auth_key;
+			var division  = webix.storage.session.get("division");
+			location.href= _url + "?page=detail_list&division=" + division + "&auth_key=" + _auth_key;
 		}
 	}
 </script>
