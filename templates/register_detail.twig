@@ -32,18 +32,22 @@
             	{view:"label", label:"မြို့နယ်"},
             	{view:"text", id:"township", name:"township", label:"", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>မြို့(Will Show At Client Page)</span>"},
-            	{view:"text", id:"town", name:"town", label:"", labelWidth:0},
-            	{view:"button", value:"အသစ်ထည့်သွင်းမည်", css:"webix_primary", id:"detail_add", height:50},
+            	{view:"text", id:"town", name:"town", label:"", labelWidth:0}
         	]},
         ]
     };
     var to_back = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
+    var btn_register = {view:"button", id:"btn_register", value:"အသစ်ထည့်သွင်းမည်", css:"webix_primary", height:50, width:200};
     var footer = {view:"label", label:"<footer style='text-align:center;>'>white-shadow</footer>"};
 	webix.ready(function () {
 		webix.ui(
 		{rows:[
 			form,
-			to_back,
+			{cols:[
+				to_back,
+				{},
+				btn_register
+			]},
 			footer,
 			{height:75}
 		]}
@@ -52,8 +56,8 @@
 	});
 	var logic = {
 		init: function() {
-			$$("detail_add").attachEvent("onItemClick", logic.detail_add);
 			$$("to_back").attachEvent("onItemClick", logic.to_back);
+			$$("btn_register").attachEvent("onItemClick", logic.detail_add);
 			logic.setDivision();
 		},
 		auth: function() {
@@ -69,7 +73,6 @@
 		},
 		detail_add: function() {
 			var _form_data = $$("registerForm").getValues();
-			// var _division = _form_data.division;
 			var _lawyer_name = _form_data.lawyer_name;
 			var _office = _form_data.office;
 			var _position = _form_data.position;
@@ -101,22 +104,39 @@
 				"town": _town
 			};
 			$.post("/", _post_data, function() {
-				alert("ပြည်နယ်နှင့်တိုင်းဒေသ အသေးစိတ် အချက်အလက်အသစ် ထည့်သွင်းမှု အောင်မြင်ပါသည်");
-				var _url = webix.storage.session.get("url");
-				logic.to_back();
+				webix.alert({
+					title:"Success",
+					ok:"OK",
+					text:"ပြည်နယ်နှင့်တိုင်းဒေသ အသေးစိတ် အချက်အလက်အသစ် ထည့်သွင်းမှု အောင်မြင်ပါသည်"
+				}) .then(function(){logic.to_back();});
 			});
 		},
 		validate: function(_lawyer_name, _office, _ph_1, _ph_2, _ph_3, _ph_4, _ph_5) {
-			if (_lawyer_name == "" && _office == "" && _ph_1 == "" && _ph_2 == "" && _ph_3 == "" && _ph_4 == "" && _ph_5 == "") {
-				alert("အမည်(သို့)ရုံးခန်း နှင့် ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ");
+			if (_office == "" && _ph_1 == "" && _ph_2 == "" && _ph_3 == "" && _ph_4 == "" && _ph_5 == "") {
+				webix.alert({
+					title:"Input Require data",
+					ok:"OK",
+					type:"alert-error",
+					text:"ရုံးခန်း နှင့် ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ"
+				});
 				return false;
 			}
-			if (_lawyer_name == "" && _office == "") {
-				alert("အမည်(သို့)ရုံးခန်းကို ထည့်သွင်းပါ");
+			if (_office == "") {
+				webix.alert({
+					title:"Input Require data",
+					ok:"OK",
+					type:"alert-error",
+					text:"ရုံးခန်းကို ထည့်သွင်းပါ"
+				});
 				return false;
 			}
 			if (_ph_1 == "" && _ph_2 == "" && _ph_3 == "" && _ph_4 == "" && _ph_5 == "") {
-				alert("ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ");
+				webix.alert({
+					title:"Input Require data",
+					ok:"OK",
+					type:"alert-error",
+					text:"ဖုန်းနံပါတ်ကို ထည့်သွင်းပါ"
+				});
 				return false;
 			}
 			return true;
