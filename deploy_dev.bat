@@ -1,0 +1,1 @@
+php -S 192.168.0.16:8080 -t C:\Users\aungz\Desktop\workspace\git\mm-lawer-info\eb-symfony\public
