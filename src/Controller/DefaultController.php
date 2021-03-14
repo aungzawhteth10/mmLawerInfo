@@ -30,6 +30,9 @@ class DefaultController extends AbstractController
 		if (($_POST['page'] ?? '') == 'lawyer_delete') {
 			return $this->_deleteLawyerData($_POST);
 		}
+		if (($_POST['page'] ?? '') == 'edit_detail') {
+			return $this->_editDetail($_POST);
+		}
 		$page = $_GET['page'] ?? '';
 		if ($page == '') {
 			return $this->_index();
@@ -53,6 +56,10 @@ class DefaultController extends AbstractController
 		if ($page == 'detail_list') {
 			$auth_key = $_GET['auth_key'] ?? '';
 			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->_getToDetailList() : $this->render('auth.twig');
+		}
+		if ($page == 'edit_detail') {
+			$auth_key = $_GET['auth_key'] ?? '';
+			return ($auth_key == 'saSksjdjdor9897uAKJCJSDFL12454524jdfdf2345jdll') ? $this->_getEditDetail() : $this->render('auth.twig');
 		}
 		if ($page == 'register_detail') {
 			$auth_key = $_GET['auth_key'] ?? '';
@@ -136,6 +143,47 @@ class DefaultController extends AbstractController
 	    $this->pdo = null;
 	    $stmt = null;
 	    return $this->render('detail_list.twig', ['division' => $division, 'detailList' => $result]);
+   }
+   private function _getEditDetail()
+   {
+		$lawyer_id = $_GET['lawyer_id'];
+		$sql = 'SELECT lawyer_id,' .
+				'lawyer_name,' .
+				'office,' .
+				'position,' .
+				'type,' .
+				'ph_1,' .
+				'ph_2,' .
+				'ph_3,' .
+				'ph_4,' .
+				'ph_5,' .
+				'division,' .
+				'township,' .
+				'town ' .
+				'FROM lawyer ' .
+				'WHERE lawyer_id=?';
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->execute([$lawyer_id]);
+  		$row = $stmt->fetchAll();
+		$result = [
+		'lawyer_id'        => $row[0]['lawyer_id'],
+		'lawyer_name'      => $row[0]['lawyer_name'],
+		'position'         => $row[0]['position'],
+		'type'             => $row[0]['type'],
+		'office'           => $row[0]['office'],
+		'ph_1'             => $row[0]['ph_1'],
+		'ph_2'             => $row[0]['ph_2'],
+		'ph_3'             => $row[0]['ph_3'],
+		'ph_4'             => $row[0]['ph_4'],
+		'ph_5'             => $row[0]['ph_5'],
+		'division'         => $row[0]['division'],
+		'township'         => $row[0]['township'],
+		'town'             => $row[0]['town'],
+	];
+		// 接続を閉じる
+	    $this->pdo = null;
+	    $stmt = null;
+	    return $this->render('edit_detail.twig', ['laweyer_info' => $result]);
    }
    private function _getDetail()
    {
@@ -257,6 +305,44 @@ class DefaultController extends AbstractController
 				'(lawyer_name, office, position, type, ph_1, ph_2, ph_3, ph_4, ph_5, division, township, town) ' .
 				'VALUES (:lawyer_name, :office, :position, :type, :ph_1, :ph_2, :ph_3, :ph_4, :ph_5, :division, :township, :town)';
 		$stmt = $this->pdo->prepare($sql);
+		$stmt->bindParam(':lawyer_name', $lawyer_name, \PDO::PARAM_STR);
+		$stmt->bindParam(':office', $office, \PDO::PARAM_STR);
+		$stmt->bindParam(':position', $position, \PDO::PARAM_STR);
+		$stmt->bindParam(':type', $type, \PDO::PARAM_STR);
+		$stmt->bindParam(':ph_1', $ph_1, \PDO::PARAM_STR);
+		$stmt->bindParam(':ph_2', $ph_2, \PDO::PARAM_STR);
+		$stmt->bindParam(':ph_3', $ph_3, \PDO::PARAM_STR);
+		$stmt->bindParam(':ph_4', $ph_4, \PDO::PARAM_STR);
+		$stmt->bindParam(':ph_5', $ph_5, \PDO::PARAM_STR);
+		$stmt->bindParam(':division', $division, \PDO::PARAM_STR);
+		$stmt->bindParam(':township', $township, \PDO::PARAM_STR);
+		$stmt->bindParam(':town', $town, \PDO::PARAM_STR);
+		$result = $stmt->execute();
+		// 接続を閉じる
+	    $this->pdo = null;
+	    $stmt = null;
+	    return new Response("success");
+   }
+   public function _editDetail($postData)
+   {
+		$lawyer_id   = $postData['lawyer_id'];
+		$lawyer_name = $postData['lawyer_name'];
+		$office      = $postData['office'];
+		$position    = $postData['position'];
+		$type        = $postData['type'];
+		$ph_1        = $postData['ph_1'];
+		$ph_2        = $postData['ph_2'];
+		$ph_3        = $postData['ph_3'];
+		$ph_4        = $postData['ph_4'];
+		$ph_5        = $postData['ph_5'];
+		$division    = $postData['division'];
+		$township    = $postData['township'];
+		$town        = $postData['town'];
+		$sql = 'UPDATE lawyer ' .
+				'SET lawyer_name=:lawyer_name, office=:office, position=:position, type=:type, ph_1=:ph_1, ph_2=:ph_2, ph_3=:ph_3, ph_4=:ph_4, ph_5=:ph_5, division=:division, township=:township, town=:town ' .
+				'where lawyer_id=:lawyer_id';
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->bindParam(':lawyer_id', $lawyer_id, \PDO::PARAM_INT);
 		$stmt->bindParam(':lawyer_name', $lawyer_name, \PDO::PARAM_STR);
 		$stmt->bindParam(':office', $office, \PDO::PARAM_STR);
 		$stmt->bindParam(':position', $position, \PDO::PARAM_STR);

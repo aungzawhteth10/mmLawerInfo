@@ -25,7 +25,7 @@
 				{view:"label", id:"detail_label_township_{{detail.index}}", label:"{{detail.township}}", hidden:"{{detail.township_show}}"},
 				{view:"label", id:"detail_label_town_{{detail.index}}", label:"{{detail.town}}", hidden:"{{detail.town_show}}"},
 				{cols:[
-					{view:"button", value:"Edit", css:"webix_primary", width:55, height:55, click:function() {logic.detail_edit("{{detail.lawyer_id}}");}},
+					{view:"button", value:"ပြင်ဆင်မည်", css:"webix_primary", width:100, height:55, click:function() {logic.detail_edit("{{detail.lawyer_id}}");}},
 					{view:"button", value:"<img src='/images/remove_icon.jpg'>", width:55, height:55, click:function() {logic.detail_delete("{{detail.lawyer_id}}");}},
 					{}
 				]},
@@ -68,6 +68,11 @@
 			var _url = webix.storage.session.get("url");
 			var _auth_key = webix.storage.session.get("auth_key");
 			location.href= _url + "?page=register_detail&division=" + division + "&auth_key=" + _auth_key;
+		},
+		detail_edit: function(lawyer_id) {
+			var _url = webix.storage.session.get("url");
+			var _auth_key = webix.storage.session.get("auth_key");
+			location.href= _url + "?page=edit_detail&lawyer_id=" + lawyer_id + "&auth_key=" + _auth_key;
 		},
 		detail_delete: function(lawyer_id) {
 			webix.confirm({
