@@ -12,17 +12,23 @@
 	    elements:[
 {% for detail in detailList %}
 			{id:"row_{{detail.index}}", rows:[
+				{view:"label", id:"detail_label_lawyer_id_{{detail.index}}", label:"id:{{detail.lawyer_id}}"},
 				{view:"label", id:"detail_label_name_{{detail.index}}", label:"{{detail.lawyer_name}}", hidden:"{{detail.lawyer_name_show}}"},
 				{view:"label", id:"detail_label_office_{{detail.index}}", label:"{{detail.office}}", hidden:"{{detail.office_show}}"},
 				{view:"label", id:"detail_label_position_{{detail.index}}", label:"{{detail.position}}", hidden:"{{detail.position_show}}"},
 				{view:"label", id:"detail_label_type_{{detail.index}}", label:"{{detail.type}}", hidden:"{{detail.type_show}}"},
-				{view:"label", id:"detail_label_ph_1_{{detail.index}}", label:"<a href='tel:{{detail.ph_1}}'>{{detail.ph_1}}</a>", hidden:"{{detail.ph_1_show}}"},
-				{view:"label", id:"detail_label_ph_2_{{detail.index}}", label:"<a href='tel:{{detail.ph_2}}'>{{detail.ph_2}}</a>", hidden:"{{detail.ph_2_show}}"},
-				{view:"label", id:"detail_label_ph_3_{{detail.index}}", label:"<a href='tel:{{detail.ph_3}}'>{{detail.ph_3}}</a>", hidden:"{{detail.ph_3_show}}"},
-				{view:"label", id:"detail_label_ph_4_{{detail.index}}", label:"<a href='tel:{{detail.ph_4}}'>{{detail.ph_4}}</a>", hidden:"{{detail.ph_4_show}}"},
-				{view:"label", id:"detail_label_ph_5_{{detail.index}}", label:"<a href='tel:{{detail.ph_5}}'>{{detail.ph_5}}</a>", hidden:"{{detail.ph_5_show}}"},
+				{view:"label", id:"detail_label_ph_1_{{detail.index}}", label:"{{detail.ph_1}}", hidden:"{{detail.ph_1_show}}"},
+				{view:"label", id:"detail_label_ph_2_{{detail.index}}", label:"{{detail.ph_2}}", hidden:"{{detail.ph_2_show}}"},
+				{view:"label", id:"detail_label_ph_3_{{detail.index}}", label:"{{detail.ph_3}}", hidden:"{{detail.ph_3_show}}"},
+				{view:"label", id:"detail_label_ph_4_{{detail.index}}", label:"{{detail.ph_4}}", hidden:"{{detail.ph_4_show}}"},
+				{view:"label", id:"detail_label_ph_5_{{detail.index}}", label:"{{detail.ph_5}}", hidden:"{{detail.ph_5_show}}"},
 				{view:"label", id:"detail_label_township_{{detail.index}}", label:"{{detail.township}}", hidden:"{{detail.township_show}}"},
 				{view:"label", id:"detail_label_town_{{detail.index}}", label:"{{detail.town}}", hidden:"{{detail.town_show}}"},
+				{cols:[
+					{view:"button", value:"Edit", css:"webix_primary", width:55, height:55, click:function() {logic.detail_edit("{{detail.lawyer_id}}");}},
+					{view:"button", value:"<img src='/images/remove_icon.jpg'>", width:55, height:55, click:function() {logic.detail_delete("{{detail.lawyer_id}}");}},
+					{}
+				]},
 				{height:5, rows:[{view:"label", label:"<div style='height:1px; background:black;'></div>", css:"line"}]},
 			]},
 {% endfor %}
@@ -62,6 +68,41 @@
 			var _url = webix.storage.session.get("url");
 			var _auth_key = webix.storage.session.get("auth_key");
 			location.href= _url + "?page=register_detail&division=" + division + "&auth_key=" + _auth_key;
+		},
+		detail_delete: function(lawyer_id) {
+			webix.confirm({
+			  title:"Warning!",
+			  ok:"Yes", cancel:"No",
+			  text:"id:" + lawyer_id + "၏အချက်အလက်ကို ဖျက်သိမ်းမည်"
+			}).then(function(){
+				var _post_data = {
+					"page": "lawyer_delete",
+					"lawyer_id": lawyer_id
+				};
+				$.post("/", _post_data, function(data) {
+				if (data == "success") {
+					webix.alert({
+					  title:"Success",
+					  ok:"OK",
+					  width:300,
+					  text:"id:" + lawyer_id + "၏အချက်အလက် ဖျက်သိမ်းမှု အောင်မြင်ပါသည်"
+					}) .then(function(){logic.reload();}).fail(function(){});
+				} else {
+					webix.alert({
+					  title:"Fail",
+					  ok:"OK",
+					  text:"id:" + lawyer_id + "အချက်အလက်များ မရှိတော့ပါ"
+					});
+					logic.reload();
+				}
+			});
+			  });
+		},
+		reload: function() {
+			var _auth_key = webix.storage.session.get("auth_key") || "";
+			var division = webix.storage.session.get("division") || "";
+			var _url = webix.storage.session.get("url");
+			location.href= _url + "?page=detail_list&division=" + division + "&auth_key=" + _auth_key;
 		}
 	};
 </script>

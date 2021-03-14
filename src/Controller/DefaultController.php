@@ -27,6 +27,9 @@ class DefaultController extends AbstractController
 		if (($_POST['page'] ?? '') == 'division_delete') {
 			return $this->_deleteDivisionData($_POST);
 		}
+		if (($_POST['page'] ?? '') == 'lawyer_delete') {
+			return $this->_deleteLawyerData($_POST);
+		}
 		$page = $_GET['page'] ?? '';
 		if ($page == '') {
 			return $this->_index();
@@ -290,6 +293,23 @@ class DefaultController extends AbstractController
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->bindParam(':division', $division, \PDO::PARAM_STR);
 		$count += $stmt->execute();
+		if ($count == 0) {
+			return new Response("failed");
+		}
+		// 接続を閉じる
+	    $this->pdo = null;
+	    $stmt = null;
+	    return new Response("success");
+   }
+   public function _deleteLawyerData($postData)
+   {
+		$lawyer_id = $postData['lawyer_id'];
+		$sql = 'DELETE FROM lawyer ' .
+				'WHERE lawyer_id=:lawyer_id';
+		$stmt = $this->pdo->prepare($sql);
+		$stmt->bindParam(':lawyer_id', $lawyer_id, \PDO::PARAM_INT);
+		$count = 0;
+		$count = $stmt->execute();
 		if ($count == 0) {
 			return new Response("failed");
 		}

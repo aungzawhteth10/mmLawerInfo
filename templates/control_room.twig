@@ -61,7 +61,7 @@
 		},
 		division_delete: function(id, division) {
 			webix.confirm({
-			  title:"Title",
+			  title:"Warning!",
 			  ok:"Yes", cancel:"No",
 			  text:division + "၏အချက်အလက် အားလုံးကို ဖျက်သိမ်းမည်"
 			}).then(function(){
@@ -89,7 +89,7 @@
 			});
 			  });
 		},
-		reload: function(id) {
+		reload: function() {
 			var _auth_key = webix.storage.session.get("auth_key") || "";
 			var _url = webix.storage.session.get("url");
 			location.href= _url + "?page=control_room&auth_key=" + _auth_key;
