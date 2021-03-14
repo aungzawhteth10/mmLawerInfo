@@ -10,34 +10,34 @@
         elements:[
         	{autowidth:true, rows:[
         		{view:"label", label:"အမည်"},
-            	{view:"text", id:"lawyer_name", name:"lawyer_name", label:"", labelWidth:0},
+            	{view:"text", id:"lawyer_name", name:"lawyer_name", label:"", value:"{{laweyer_info.lawyer_name}}", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>ရုံးခန်း(Will Show At Client Page)</span>"},
-            	{view:"text", id:"office", name:"office", label:"", labelWidth:0},
+            	{view:"text", id:"office", name:"office", label:"", value:"{{laweyer_info.office}}", labelWidth:0},
         		{view:"label", label:"ရာထူး"},
-            	{view:"text", id:"position", name:"position", label:"", labelWidth:0},
+            	{view:"text", id:"position", name:"position", label:"", value:"{{laweyer_info.position}}", labelWidth:0},
             	{view:"label", label:"အမျိုးအစား"},
-            	{view:"text", id:"type", name:"type", label:"", labelWidth:0},
+            	{view:"text", id:"type", name:"type", label:"", value:"{{laweyer_info.type}}", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>ဖုန်းနံပါတ်(၁)(Will Show At Client Page)</span>"},
-            	{view:"text", id:"ph_1", name:"ph_1", label:"", labelWidth:0},
+            	{view:"text", id:"ph_1", name:"ph_1", label:"", value:"{{laweyer_info.ph_1}}", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>ဖုန်းနံပါတ်(၂)(Will Show At Client Page)</span>"},
-            	{view:"text", id:"ph_2", name:"ph_2", label:"", labelWidth:0},
+            	{view:"text", id:"ph_2", name:"ph_2", label:"", value:"{{laweyer_info.ph_2}}", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>ဖုန်းနံပါတ်(၃)(Will Show At Client Page)</span>"},
-            	{view:"text", id:"ph_3", name:"ph_3", label:"", labelWidth:0},
+            	{view:"text", id:"ph_3", name:"ph_3", label:"", value:"{{laweyer_info.ph_3}}", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>ဖုန်းနံပါတ်(၄)(Will Show At Client Page)</span>"},
-            	{view:"text", id:"ph_4", name:"ph_4", label:"", labelWidth:0},
+            	{view:"text", id:"ph_4", name:"ph_4", label:"", value:"{{laweyer_info.ph_4}}", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>ဖုန်းနံပါတ်(၅)(Will Show At Client Page)</span>"},
-            	{view:"text", id:"ph_5", name:"ph_5", label:"", labelWidth:0},
+            	{view:"text", id:"ph_5", name:"ph_5", label:"", value:"{{laweyer_info.ph_5}}", labelWidth:0},
             	{view:"label", label:"တိုင်းဒေသကြီး"},
             	{view:"text", id:"division", name:"division", label:"", labelWidth:0, disabled:true},
             	{view:"label", label:"မြို့နယ်"},
-            	{view:"text", id:"township", name:"township", label:"", labelWidth:0},
+            	{view:"text", id:"township", name:"township", label:"", value:"{{laweyer_info.township}}", labelWidth:0},
             	{view:"label", label:"<span style='color:green;'>မြို့(Will Show At Client Page)</span>"},
-            	{view:"text", id:"town", name:"town", label:"", labelWidth:0}
+            	{view:"text", id:"town", name:"town", label:"", value:"{{laweyer_info.town}}", labelWidth:0}
         	]},
         ]
     };
     var to_back = {view:"button", id:"to_back", value:"ပြန်သွားမည်", css:"webix_primary", height:50, width:100};
-    var btn_register = {view:"button", id:"btn_register", value:"အသစ်ထည့်သွင်းမည်", css:"webix_primary", height:50, width:200};
+    var btn_register = {view:"button", id:"btn_register", value:"ပြင်ဆင်မည်", css:"webix_primary", height:50, width:100};
     var footer = {view:"label", label:"<footer style='text-align:center;>'>white-shadows</footer>"};
 	webix.ready(function () {
 		webix.ui(
@@ -58,6 +58,9 @@
 		init: function() {
 			$$("to_back").attachEvent("onItemClick", logic.to_back);
 			$$("btn_register").attachEvent("onItemClick", logic.detail_add);
+			logic.dataload();
+		},
+		dataload: function() {
 			logic.setDivision();
 		},
 		auth: function() {
@@ -89,7 +92,8 @@
 			var _township = _form_data.township;
 			var _town = _form_data.town;
 			var _post_data = {
-				"page": "register_detail",
+				"page": "edit_detail",
+				"lawyer_id": "{{laweyer_info.lawyer_id}}",
 				"lawyer_name": _lawyer_name,
 				"office": _office,
 				"position": _position,
@@ -108,7 +112,7 @@
 					title:"Success",
 					ok:"OK",
 					width:300,
-					text:"ပြည်နယ်နှင့်တိုင်းဒေသ အသေးစိတ်အချက်အလက်အသစ်ထည့်သွင်းမှု အောင်မြင်ပါသည်"
+					text:"ပြည်နယ်နှင့်တိုင်းဒေသ အသေးစိတ်အချက်အလက်ပြင်ဆင်မှု အောင်မြင်ပါသည်"
 				}) .then(function(){logic.to_back();});
 			});
 		},
